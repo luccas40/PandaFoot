@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaFoot", "Assembly-CSharp.csproj", "{398C98B3-E2BC-4C27-884A-F4D3A70A9161}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaFoot", "PandaFoot.csproj", "{B66F710C-3E1A-3EE7-0154-869BC2A879FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,15 +9,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{398C98B3-E2BC-4C27-884A-F4D3A70A9161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{398C98B3-E2BC-4C27-884A-F4D3A70A9161}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{398C98B3-E2BC-4C27-884A-F4D3A70A9161}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{398C98B3-E2BC-4C27-884A-F4D3A70A9161}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B66F710C-3E1A-3EE7-0154-869BC2A879FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B66F710C-3E1A-3EE7-0154-869BC2A879FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B66F710C-3E1A-3EE7-0154-869BC2A879FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B66F710C-3E1A-3EE7-0154-869BC2A879FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal

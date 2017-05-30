@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,32 +12,21 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour {
 
 
-    List<League> ligas;
-
+    GameManager manager;
+    private Dados dados;
+    private string saveData;
 	
 	void Start () {
-
         DontDestroyOnLoad(this);
-        ligas = new List<League>();
-        League t = new League("Torneio 1");
-        t.gerarConfrontos();
-        t.prepareMatches(new DateTime());
+        manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        saveData = Application.persistentDataPath + "/save/" + manager.getSaveData();
+        
+        if (!File.Exists(saveData)) loadNewGame();
+        else loadSaveData();
+        saveGameData();
 
-        ligas.Add(t);
-
-        //teste
-
-        //GameObject bk = GameObject.Find("Canvas/Background");
-       // bk.GetComponent<Image>().material.SetColor("_ColorBot", Color.red);
-
-
+        
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 
     public void startNextMatches()
     {
@@ -45,7 +37,7 @@ public class GameController : MonoBehaviour {
 
     IEnumerator matchMinuteByMinute(int minute, float speed)
     {
-        foreach(League l in ligas)
+        foreach(League l in dados.getLigas())
         {
             l.playMatches(minute);
         }
@@ -62,6 +54,45 @@ public class GameController : MonoBehaviour {
         
     }
 
+    void loadNewGame() { 
+    
+        League t = new League("Torneio 1");
+        t.gerarConfrontos();
+        t.prepareMatches(new DateTime());
 
+        dados = new Dados();
+        dados.addLeague(t);
+        saveData += "save.ide";
+        
+    }
+
+    void loadSaveData()
+    {        
+        try
+        {
+            using (Stream stream = File.Open(saveData, FileMode.Open))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+                dados = (Dados)bin.Deserialize(stream);
+            }
+        }
+        catch (IOException) { loadNewGame(); }
+    }
+
+
+    public void saveGameData()
+    {
+        try {
+            if (!Directory.Exists(saveData.Replace("save.ide", "")))
+                Directory.CreateDirectory(saveData.Replace("save.ide", ""));
+
+            using (Stream stream = File.Open(saveData, FileMode.CreateNew))
+            {
+                BinaryFormatter bin = new BinaryFormatter();
+                bin.Serialize(stream, dados);
+            }
+        }
+        catch (IOException) { }
+    }
 
 }
