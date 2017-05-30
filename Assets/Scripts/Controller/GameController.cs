@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -11,13 +13,21 @@ public class GameController : MonoBehaviour {
 
 	
 	void Start () {
+
+        DontDestroyOnLoad(this);
         ligas = new List<League>();
         League t = new League("Torneio 1");
         t.gerarConfrontos();
         t.prepareMatches(new DateTime());
 
         ligas.Add(t);
-        startNextMatches();
+
+        //teste
+
+        //GameObject bk = GameObject.Find("Canvas/Background");
+       // bk.GetComponent<Image>().material.SetColor("_ColorBot", Color.red);
+
+
     }
 	
 	// Update is called once per frame
@@ -28,6 +38,7 @@ public class GameController : MonoBehaviour {
 
     public void startNextMatches()
     {
+        SceneManager.LoadScene("GameLevel");
         StartCoroutine(matchMinuteByMinute(0, 1f/Const.Speed));
     }
 
