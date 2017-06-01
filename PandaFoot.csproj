@@ -81,6 +81,15 @@
     <Reference Include="Mono.Cecil">
       <HintPath>Library\UnityAssemblies\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Facebook.Unity.Settings">
       <HintPath>Library\FacebookSDK\Facebook.Unity.Settings.dll</HintPath>
     </Reference>
@@ -88,8 +97,10 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controller\GameController.cs" />
     <Compile Include="Assets\Scripts\Controller\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Database\ConvertDados.cs" />
     <Compile Include="Assets\Scripts\Database\Dados.cs" />
     <Compile Include="Assets\Scripts\Entity\Bank.cs" />
+    <Compile Include="Assets\Scripts\Entity\Coach.cs" />
     <Compile Include="Assets\Scripts\Entity\League.cs" />
     <Compile Include="Assets\Scripts\Entity\Match.cs" />
     <Compile Include="Assets\Scripts\Entity\MatchAI.cs" />

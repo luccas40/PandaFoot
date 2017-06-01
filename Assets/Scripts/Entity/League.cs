@@ -25,23 +25,59 @@ public class League {
 
     public void gerarConfrontos()
     {
-        Team team1 = new Team("Time1", new List<Player>(), new Bank());
-        Team team2 = new Team("Time2", new List<Player>(), new Bank());
+        bool frente = true;
+        foreach(Team t in participantes)
+        {
+            DateTime vix = DateTime.Parse("2017-01-29");
 
-        Team team3 = new Team("Time3", new List<Player>(), new Bank());
-        Team team4 = new Team("Time4", new List<Player>(), new Bank());
+            if(frente)
+                for(int i=0; i<participantes.Count; i++)
+                {
+                    
+                    if (!diaPartidas.ContainsKey(vix))
+                    {
+                        diaPartidas.Add(vix, new Match());
+                    }
 
-        Match ma = new Match();
-        ma.addConfronto(team1, team2);
-        ma.addConfronto(team3, team4);
-        diaPartidas.Add(new DateTime(), ma);
+                    if (!t.Equals(participantes[i]))
+                    {                        
+                        diaPartidas[vix].addConfronto(t, participantes[i]);                        
+                    }
+                    vix = vix.AddDays(7);
+                    frente = false;
+                }
+            else
+                for (int i = (participantes.Count-1); i >= 0 ; i--)
+                {                    
+                    if (!diaPartidas.ContainsKey(vix))
+                        diaPartidas.Add(vix, new Match());
+                    if (!t.Equals(participantes[i]))
+                    {
+                        diaPartidas[vix].addConfronto(t, participantes[i]);
+                    }
+                    vix = vix.AddDays(7);
+                    frente = true;
+                }
+
+        }
+
 
     }
+
+    public void setParticipantes(ref List<Team> p) { this.participantes = p; }
 
 
     public void prepareMatches(DateTime dia)
     {
         m = diaPartidas[dia];
+        float YPOS = 400;
+        foreach (MatchAI mai in m.getPartidas())
+        {
+            GameObject o = UnityEngine.Object.Instantiate(Resources.Load("Prefabs/Match"), new Vector3(0, YPOS, 0), new Quaternion()) as GameObject;
+            o.transform.SetParent(GameObject.Find("Canvas/Panel").transform, false);
+            YPOS -= 35;
+            mai.setMatchObj(o);
+        }
     }
 
     public void playMatches(int minute)

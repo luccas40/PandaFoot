@@ -11,18 +11,22 @@ public class Player {
     private int str;
     private int power;
     private int energy;
+    private string nation;
+    private int position;
 
     public Player()
     {
     }
 
-    public Player(string nome, int idade, int forca, int potencial, int energy)
+    public Player(string nome, int idade, int forca, int potencial, int energy, string nation, int position)
     {
         this.name = nome;
         this.age = idade;
         this.str = forca;
         this.power = potencial;
         this.energy = energy;
+        this.nation = nation;
+        this.position = position;
     }
 
     public string getName()
