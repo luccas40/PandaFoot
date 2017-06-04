@@ -9,17 +9,17 @@ public class Dados {
     private Coach jogador;
 
     private DateTime actualDay;
-    private List<League> ligas; //Todas as Ligas Disponiveis
+    private List<AbstractChampionship> campeonatos; //Todas as Ligas Disponiveis
     public List<Team> times; //Todos os times Disponiveis;
 
     public Dados()
     {
-        actualDay = DateTime.Parse("2017-01-29");
-        ligas = new List<League>();
+        actualDay = DateTime.Parse("2017-01-27");
+        campeonatos = new List<AbstractChampionship>();
 
     }
 
-    public List<League> getLigas() { return ligas; }
+    public List<AbstractChampionship> getChampionships() { return campeonatos; }
     public DateTime getDay() { return actualDay; }
 
     public void nextDay()
@@ -29,9 +29,9 @@ public class Dados {
 
 
 
-    public void addLeague(League l)
+    public void addChampionship(AbstractChampionship l)
     {
-        ligas.Add(l);
+        campeonatos.Add(l);
     }
 
     public void setTimes(List<Team> times) { this.times = times; }

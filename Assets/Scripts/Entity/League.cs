@@ -5,87 +5,63 @@ using System.Globalization;
 using UnityEngine;
 
 [Serializable()]
-public class League {
-
-    private string nome;
-    private Dictionary<DateTime, Match> diaPartidas;
-    private List<Team> participantes;
-    private Match m;
-
-
-    public League(string nome)
+public class League : AbstractChampionship
+{
+    public League(string nome, DateTime startDay) : base(nome, startDay)
     {
-        this.nome = nome;
-        diaPartidas = new Dictionary<DateTime, Match>();
-        participantes = new List<Team>();
     }
 
-
-
-
-    public void gerarConfrontos()
+    public override void gerarConfrontos()
     {
+
         bool frente = true;
-        foreach(Team t in participantes)
+        List<Team> ListTeam = new List<Team>(participantes);
+
+
+        if (ListTeam.Count % 2 != 0)
         {
-            DateTime vix = DateTime.Parse("2017-01-29");
+            ListTeam.Add(new Team());
+        }
 
-            if(frente)
-                for(int i=0; i<participantes.Count; i++)
-                {
-                    
-                    if (!diaPartidas.ContainsKey(vix))
-                    {
-                        diaPartidas.Add(vix, new Match());
-                    }
+        int numDays = (participantes.Count - 1);
+        int halfSize = participantes.Count / 2;
 
-                    if (!t.Equals(participantes[i]))
-                    {                        
-                        diaPartidas[vix].addConfronto(t, participantes[i]);                        
-                    }
-                    vix = vix.AddDays(7);
-                    frente = false;
-                }
+        List<Team> teams = new List<Team>();
+
+        teams.AddRange(ListTeam);
+        teams.RemoveAt(0);
+
+        int teamsSize = teams.Count;
+
+        DateTime diaCampeonato = startDate;
+
+        for (int day = 0; day < numDays; day++)
+        {
+            Match m = new Match();
+            int teamIdx = day % teamsSize;
+            if (frente)
+            {
+                m.addConfronto(participantes[participantes.IndexOf(teams[teamIdx])], participantes[participantes.IndexOf(ListTeam[0])]);
+                frente = false;
+            }
             else
-                for (int i = (participantes.Count-1); i >= 0 ; i--)
-                {                    
-                    if (!diaPartidas.ContainsKey(vix))
-                        diaPartidas.Add(vix, new Match());
-                    if (!t.Equals(participantes[i]))
-                    {
-                        diaPartidas[vix].addConfronto(t, participantes[i]);
-                    }
-                    vix = vix.AddDays(7);
-                    frente = true;
-                }
+            {
+                m.addConfronto(participantes[participantes.IndexOf(ListTeam[0])], participantes[participantes.IndexOf(teams[teamIdx])]);
+                frente = true;
+            }
 
+            for (int idx = 1; idx < halfSize; idx++)
+            {
+                int firstTeam = (day + idx) % teamsSize;
+                int secondTeam = (day + teamsSize - idx) % teamsSize;
+                m.addConfronto(participantes[participantes.IndexOf(teams[firstTeam])], participantes[participantes.IndexOf(teams[secondTeam])]);
+            }
+
+
+            if (!diaPartidas.ContainsKey(diaCampeonato))
+                diaPartidas.Add(diaCampeonato, m);
+            diaCampeonato = diaCampeonato.AddDays(7);
         }
 
-
     }
-
-    public void setParticipantes(ref List<Team> p) { this.participantes = p; }
-
-
-    public void prepareMatches(DateTime dia)
-    {
-        m = diaPartidas[dia];
-        float YPOS = 400;
-        foreach (MatchAI mai in m.getPartidas())
-        {
-            GameObject o = UnityEngine.Object.Instantiate(Resources.Load("Prefabs/Match"), new Vector3(0, YPOS, 0), new Quaternion()) as GameObject;
-            o.transform.SetParent(GameObject.Find("Canvas/Panel").transform, false);
-            YPOS -= 35;
-            mai.setMatchObj(o);
-        }
-    }
-
-    public void playMatches(int minute)
-    {
-        m.actMatches(minute);
-    }
-
-
-
-
 }

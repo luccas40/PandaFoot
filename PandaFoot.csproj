@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Android:13</UnityBuildTarget>
     <UnityVersion>5.6.1f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -99,14 +97,17 @@
     <Compile Include="Assets\Scripts\Controller\GameManager.cs" />
     <Compile Include="Assets\Scripts\Database\ConvertDados.cs" />
     <Compile Include="Assets\Scripts\Database\Dados.cs" />
+    <Compile Include="Assets\Scripts\Entity\AbstractChampionship.cs" />
     <Compile Include="Assets\Scripts\Entity\Bank.cs" />
     <Compile Include="Assets\Scripts\Entity\Coach.cs" />
+    <Compile Include="Assets\Scripts\Entity\Cup.cs" />
     <Compile Include="Assets\Scripts\Entity\League.cs" />
     <Compile Include="Assets\Scripts\Entity\Match.cs" />
     <Compile Include="Assets\Scripts\Entity\MatchAI.cs" />
     <Compile Include="Assets\Scripts\Entity\Player.cs" />
     <Compile Include="Assets\Scripts\Entity\Team.cs" />
     <Compile Include="Assets\Scripts\Util\Const.cs" />
+    <Compile Include="Assets\Scripts\Util\Security.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shader\Degrade.shader" />

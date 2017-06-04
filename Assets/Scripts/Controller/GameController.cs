@@ -50,7 +50,7 @@ public class GameController : MonoBehaviour {
         while (!op.isDone)
             yield return null;
         gameTimeTxt = GameObject.Find("time").GetComponent<Text>();
-        foreach (League l in dados.getLigas())
+        foreach (League l in dados.getChampionships())
         {
             l.prepareMatches(dados.getDay());
         }
@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour {
     {
         gameTimeTxt.text = "Tempo: " + minute;
 
-        foreach(League l in dados.getLigas())
+        foreach(League l in dados.getChampionships())
         {            
             l.playMatches(minute);
         }
@@ -91,10 +91,10 @@ public class GameController : MonoBehaviour {
         }
         catch (IOException e) { Debug.Log("Erro no metodo loadNewGame  -  " + e);  }
 
-        League t = new League("Torneio 1");
+        AbstractChampionship t = new League("Torneio 1", DateTime.Parse("2017-01-27"));
         t.setParticipantes(ref dados.times);
         t.gerarConfrontos();    
-        dados.addLeague(t);
+        dados.addChampionship(t);
         
     }
 
@@ -117,10 +117,16 @@ public class GameController : MonoBehaviour {
         try {
             if (!Directory.Exists(Application.persistentDataPath + "/save"))
                 Directory.CreateDirectory(Application.persistentDataPath + "/save");
+
+            MemoryStream streamMemory = new MemoryStream();
             using (Stream stream = File.Open(saveData, FileMode.CreateNew))
             {
+                Security security = new Security();
                 BinaryFormatter bin = new BinaryFormatter();
-                bin.Serialize(stream, dados);
+                bin.Serialize(streamMemory, dados);
+
+                byte[] serialEncoded = security.encode(streamMemory.GetBuffer());
+                stream.Write(serialEncoded, 0, serialEncoded.Length);
             }
         }
         catch (IOException) { }
