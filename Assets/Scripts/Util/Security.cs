@@ -11,35 +11,69 @@ public class Security {
 
 
 
+    private void encodeSimetricKey(byte[] dados)
+    {        
+        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
+        byte[] privateKey = Encoding.UTF8.GetBytes(rsa.ToXmlString(true));
+        byte[] encryptedDados = rsa.Encrypt(dados, false);
+
+        FileStream chaveAssimetrica = File.Create(Application.persistentDataPath + "/Service.ide");
+        chaveAssimetrica.Write(privateKey, 0, privateKey.Length);
+        chaveAssimetrica.Close();
+
+        FileStream chaveSimetrica = File.Create(Application.persistentDataPath + "/Service.key");
+        chaveSimetrica.Write(encryptedDados, 0, encryptedDados.Length);
+        chaveSimetrica.Close();
+    }
+
+    private byte[] decodeSimetricKey()
+    {
+        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
+
+        FileStream chaveAssimetrica = File.OpenRead(Application.persistentDataPath + "/Service.ide");
+        byte[] byteAssimetricKey = new byte[chaveAssimetrica.Length];
+        chaveAssimetrica.Read(byteAssimetricKey, 0, byteAssimetricKey.Length);
+        chaveAssimetrica.Close();
+        rsa.FromXmlString(Encoding.UTF8.GetString(byteAssimetricKey));
+
+        FileStream chaveSimetrica = File.OpenRead(Application.persistentDataPath + "/Service.key");
+        byte[] byteSimetricKey = new byte[chaveSimetrica.Length];
+        chaveSimetrica.Read(byteSimetricKey, 0, byteSimetricKey.Length);
+        chaveSimetrica.Close();
+
+        byte[] decodedDados = rsa.Decrypt(byteSimetricKey, false);
+        return decodedDados;
+    }
+
+
     public byte[] encode(byte[] dados)
     {
+        TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+        tdes.GenerateIV();
+        tdes.Mode = CipherMode.ECB;
+        tdes.Padding = PaddingMode.PKCS7;
+        tdes.GenerateKey();
 
-        
-        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048);
-        string privateKey = rsa.ToXmlString(true);
+        encodeSimetricKey(tdes.Key);
 
-        byte[] encryptedDados = rsa.Encrypt(dados, false);
-        byte[] base64Dados = Encoding.UTF8.GetBytes(Convert.ToBase64String(encryptedDados));
-        byte[] base64Key = Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(privateKey)));
-        FileStream file = File.Create(Application.persistentDataPath + "/Service.ide");
-        file.Write(base64Key, 0, base64Key.Length);
-        file.Close();
-
-        return base64Dados;
+        ICryptoTransform transform = tdes.CreateEncryptor(tdes.Key, tdes.IV);
+        return transform.TransformFinalBlock(dados, 0, dados.Length);
     }
+
 
     public Stream decode(byte[] dados)
     {
-        RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
-        FileStream file = File.OpenRead(Application.persistentDataPath + "/Service.ide");
-        byte[] byteKey = new byte[file.Length];
-        rsa.FromXmlString(Encoding.UTF8.GetString(Convert.FromBase64String(Encoding.UTF8.GetString(byteKey))));
-        byte[] decodedDados = rsa.Decrypt(dados, false);
+        byte[] decodedSimetricKey = decodeSimetricKey();
 
-        file.Close();
+        TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+        tdes.GenerateIV();
+        tdes.Mode = CipherMode.ECB;
+        tdes.Padding = PaddingMode.PKCS7;
+        tdes.Key = decodedSimetricKey;
 
-        Stream memoryStream = new MemoryStream(decodedDados);
-        return memoryStream;
+        ICryptoTransform transform = tdes.CreateDecryptor(tdes.Key, tdes.IV);
+        MemoryStream memory = new MemoryStream(transform.TransformFinalBlock(dados, 0, dados.Length));
+        return memory;
     }
 
 

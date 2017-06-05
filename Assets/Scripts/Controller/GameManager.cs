@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
 
 
     private string saveData;
+    private bool newGame;
 
     public GameObject[] panes;
     public Text[] savesText;
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour {
         if (!"".Equals(name))
         {
             saveData = name + ".ide";
+            newGame = true;
             StartCoroutine(loadLevel());
         }
                 
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour {
         if (!"Vazio".Equals(saveName.text))
         {
             saveData = saveName.text + ".ide";
+            newGame = false;
             StartCoroutine(loadLevel());
         }
     }
@@ -71,10 +74,8 @@ public class GameManager : MonoBehaviour {
             yield return null;
     }
 
-    public string getSaveData()
-    {
-        return saveData;
-    }
+    public string getSaveData(){ return saveData; }
+    public bool getNewGame() { return newGame; }
 
     public void carregarSaves()
     {

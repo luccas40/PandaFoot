@@ -23,23 +23,14 @@ public class GameController : MonoBehaviour {
         manager = GameObject.Find("GameManager").GetComponent<GameManager>();
         saveData = Application.persistentDataPath + "/save/" + manager.getSaveData();
         
-        if (!File.Exists(saveData)) loadNewGame();
+        if (manager.getNewGame()) loadNewGame();
         else loadSaveData();    
-        saveGameData();
-
-        
+        saveGameData();        
     }
 
     public void startNextMatches()
     {
         StartCoroutine(waitLoadGameLevel());
-        //SceneManager.LoadScene("GameLevel");
-       /* foreach (League l in dados.getLigas())
-        {
-            l.prepareMatches(dados.getDay());
-        }*/
-        
-       // StartCoroutine(matchMinuteByMinute(0, 1f/Const.Speed));
     }
 
 
@@ -104,8 +95,11 @@ public class GameController : MonoBehaviour {
         {
             using (Stream stream = File.Open(saveData, FileMode.Open))
             {
+                byte[] ecryptedDados = new byte[stream.Length];
+                stream.Read(ecryptedDados, 0, ecryptedDados.Length);
+                Security security = new Security();
                 BinaryFormatter bin = new BinaryFormatter();
-                dados = (Dados)bin.Deserialize(stream);
+                dados = (Dados)bin.Deserialize(security.decode(ecryptedDados));
             }
         }
         catch (IOException) { /*voltar*/ }
@@ -117,16 +111,16 @@ public class GameController : MonoBehaviour {
         try {
             if (!Directory.Exists(Application.persistentDataPath + "/save"))
                 Directory.CreateDirectory(Application.persistentDataPath + "/save");
-
-            MemoryStream streamMemory = new MemoryStream();
+            
             using (Stream stream = File.Open(saveData, FileMode.CreateNew))
             {
+                MemoryStream streamMemory = new MemoryStream();
                 Security security = new Security();
                 BinaryFormatter bin = new BinaryFormatter();
                 bin.Serialize(streamMemory, dados);
-
                 byte[] serialEncoded = security.encode(streamMemory.GetBuffer());
                 stream.Write(serialEncoded, 0, serialEncoded.Length);
+                streamMemory.Close();
             }
         }
         catch (IOException) { }
