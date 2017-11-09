@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Const {
+namespace PwndaGames.PandaFoot.Util
+{
+    public class Const
+    {
 
 
-    public static float Speed = 5;
+        public static float Speed = 1;
+        
 
-	
+
+    }
 }

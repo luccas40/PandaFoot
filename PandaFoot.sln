@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaFoot", "PandaFoot.csproj", "{B66F710C-3E1A-3EE7-0154-869BC2A879FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PFDataEditor", "PFDataEditor\PFDataEditor.csproj", "{44F4B97B-E4F2-4AD3-A5C1-3E32FE2739CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaFootLibrary", "PandaFootLibrary\PandaFootLibrary.csproj", "{44EA32DE-76FC-402D-BC94-C32C6EDCE4FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +17,14 @@ Global
 		{B66F710C-3E1A-3EE7-0154-869BC2A879FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B66F710C-3E1A-3EE7-0154-869BC2A879FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B66F710C-3E1A-3EE7-0154-869BC2A879FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44F4B97B-E4F2-4AD3-A5C1-3E32FE2739CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F4B97B-E4F2-4AD3-A5C1-3E32FE2739CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44F4B97B-E4F2-4AD3-A5C1-3E32FE2739CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44F4B97B-E4F2-4AD3-A5C1-3E32FE2739CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44EA32DE-76FC-402D-BC94-C32C6EDCE4FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44EA32DE-76FC-402D-BC94-C32C6EDCE4FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44EA32DE-76FC-402D-BC94-C32C6EDCE4FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44EA32DE-76FC-402D-BC94-C32C6EDCE4FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Levels/TeamLevel.unity
+- path: Assets/Levels/MenuLevel.unity
   isLoaded: 1
   isActive: 1

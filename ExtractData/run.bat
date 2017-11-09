@@ -1,0 +1,2 @@
+py FifaManager.py
+pause

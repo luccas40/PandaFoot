@@ -12497,6 +12497,11 @@
             
             </summary>
         </member>
+        <member name="P:NUnit.Framework.Internal.Reflect.ConstructorCallWrapper">
+            <summary>
+            Constructor delegate, makes it possible to use a factory to create objects
+            </summary>
+        </member>
         <member name="T:NUnit.Framework.Internal.TestResult">
             <summary>
             The TestResult class represents the result of a test.
@@ -17844,6 +17849,24 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="T:System.Web.UI.ICallbackEventHandler">
+            <summary>
+            A shim of the .NET interface for platforms that do not support it.
+            Used to indicate that a control can be the target of a callback event on the server.
+            </summary>
+        </member>
+        <member name="M:System.Web.UI.ICallbackEventHandler.RaiseCallbackEvent(System.String)">
+            <summary>
+            Processes a callback event that targets a control.
+            </summary>
+            <param name="report"></param>
+        </member>
+        <member name="M:System.Web.UI.ICallbackEventHandler.GetCallbackResult">
+            <summary>
+            Returns the results of a callback event that targets a control.
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:System.Lazy`1">
             <summary>

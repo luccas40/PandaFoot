@@ -1,129 +1,141 @@
-﻿using System;
+﻿using PwndaGames.PandaFoot.Database;
+using PwndaGames.PandaFoot.Model;
+using PwndaGames.PandaFoot.Model.Abstract;
+using PwndaGames.PandaFoot.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameController : MonoBehaviour {
-
-
-    GameManager manager;
-    private Dados dados;
-    private string saveData;
-
-    private Text gameTimeTxt;
-	
-	void Start () {
-        DontDestroyOnLoad(this);
-        manager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        saveData = Application.persistentDataPath + "/save/" + manager.getSaveData();
-        
-        if (manager.getNewGame()) loadNewGame();
-        else loadSaveData();    
-        saveGameData();        
-    }
-
-    public void startNextMatches()
+namespace PwndaGames.PandaFoot.Controller
+{
+    public class GameController : MonoBehaviour
     {
-        StartCoroutine(waitLoadGameLevel());
-    }
+
+        //HUD
+        public Text playerName;
+        public Text numJogadores;
+        public Text dinheiro;
+        public Text data;
+
+        //ProxPartida
+        public Text proxPartidaCasaFora;
+        public Text proxPartidaTipo;
+
+        //JogadorSelecionado
+        public Text jNome;
+        public Text jForca;
+        public Text jIdade;
+        public Text jPosition;
+        public Text jSalario;
+        public Text jJogos;
+        public Text jCarac;
+        //
 
 
-    IEnumerator waitLoadGameLevel()
-    {
-        AsyncOperation op = SceneManager.LoadSceneAsync("GameLevel");
-        yield return new WaitForSeconds(.3f);
-        while (!op.isDone)
-            yield return null;
-        gameTimeTxt = GameObject.Find("time").GetComponent<Text>();
-        foreach (League l in dados.getChampionships())
+        private GameControl state;
+
+        void Start()
         {
-            l.prepareMatches(dados.getDay());
-        }
-        StartCoroutine(matchMinuteByMinute(0, 1f / Const.Speed));
-    }
-
-
-    IEnumerator matchMinuteByMinute(int minute, float speed)
-    {
-        gameTimeTxt.text = "Tempo: " + minute;
-
-        foreach(League l in dados.getChampionships())
-        {            
-            l.playMatches(minute);
+            //DontDestroyOnLoad(this);
+            inicializarDados();
+            state = GameControl.Idle;
         }
 
-
-        minute++;
-        yield return new WaitForSeconds(speed);
-        if(minute <= 90) {
-            StartCoroutine(matchMinuteByMinute(minute, speed));
-        }else
+        /*
+        void Awake()
         {
-            //Partida Acabou
-        }
-        
-    }
-
-    void loadNewGame() {
-        dados = new Dados();
-        try
-        {
-            using (Stream stream = File.Open(Application.persistentDataPath+"/data/brazil.bin", FileMode.Open))
+            if (FindObjectsOfType(GetType()).Length > 1)
             {
-                BinaryFormatter bin = new BinaryFormatter();
-                dados.setTimes((List<Team>)bin.Deserialize(stream));
+                Destroy(gameObject);
+            }
+        }*/
+
+        void Update()
+        {
+            switch (state)
+            {
+                case GameControl.Idle: break;
+                case GameControl.Simulating: nextDay(); break;
+            }    
+        }
+
+        public void avancarOuEscalarTime()
+        {
+            state = GameControl.Simulating;
+        }
+        
+        
+        private void nextDay()
+        {
+            if (Dados.me.Calendario.ContainsKey(Dados.me.DiaAtual))
+            {
+                Dia d = Dados.me.Calendario[Dados.me.DiaAtual];
+                switch (d.Tipo)
+                {
+                    case DiaType.None: Dados.me.nextDay(); break;
+                    case DiaType.Partida: handlePartidaDay(d); return;                        
+                    case DiaType.Transferencia: Dados.me.nextDay(); break; // por enquanto
+                }
+
+            }
+            else
+            {
+                Dados.me.nextDay();
             }
         }
-        catch (IOException e) { Debug.Log("Erro no metodo loadNewGame  -  " + e);  }
 
-        AbstractChampionship t = new League("Torneio 1", DateTime.Parse("2017-01-27"));
-        t.setParticipantes(ref dados.times);
-        t.gerarConfrontos();    
-        dados.addChampionship(t);
-        
-    }
-
-    void loadSaveData()
-    {        
-        try
+        private void handlePartidaDay(Dia d)
         {
-            using (Stream stream = File.Open(saveData, FileMode.Open))
+            bool b = false;
+            foreach (Round r in d.Rounds)
             {
-                byte[] ecryptedDados = new byte[stream.Length];
-                stream.Read(ecryptedDados, 0, ecryptedDados.Length);
-                Security security = new Security();
-                BinaryFormatter bin = new BinaryFormatter();
-                dados = (Dados)bin.Deserialize(security.decode(ecryptedDados));
+                 
             }
+            b = true;
+
+            if (b) //se tiver partida com o time do jogador
+            {
+                //mostrar tela de escalação do time
+                SceneManager.LoadScene("GameLevel");//por enquanto
+                state = GameControl.Idle;
+            }
+            else
+            {
+                //simular os jogos e mostrar na tela
+            }
+
+
         }
-        catch (IOException) { /*voltar*/ }
+
+        private void inicializarDados()
+        {
+            Coach c = Dados.me.getJogador();
+            playerName.text = c.Nome;
+            numJogadores.text = c.Time.getPlayers().Count + " Jogadores";
+            dinheiro.text = "$ "+c.Time.Banco.Money;
+            data.text = Dados.me.DiaAtual.ToShortDateString();
+
+            proxPartidaCasaFora.text = "Próxima Partida (Fora)";
+            proxPartidaTipo.text = "Amistoso";
+
+            jNome.text = c.Time.getPlayers()[0].Nome;
+            jForca.text = "Força: "+c.Time.getPlayers()[0].Forca; 
+            jIdade.text = "Idade: "+c.Time.getPlayers()[0].Idade;
+            jPosition.text = "Posição: " + c.Time.getPlayers()[0].Position;
+            jSalario.text = "Passe: $"+c.Time.getPlayers()[0].Valor+ "   \nSalário: $" + c.Time.getPlayers()[0].Salario; 
+            jJogos.text = "Jogos: 0     Gols: 0"; 
+            jCarac.text = "Caracteristicas"; 
+
+
     }
 
-
-    public void saveGameData()
-    {
-        try {
-            if (!Directory.Exists(Application.persistentDataPath + "/save"))
-                Directory.CreateDirectory(Application.persistentDataPath + "/save");
-            
-            using (Stream stream = File.Open(saveData, FileMode.CreateNew))
-            {
-                MemoryStream streamMemory = new MemoryStream();
-                Security security = new Security();
-                BinaryFormatter bin = new BinaryFormatter();
-                bin.Serialize(streamMemory, dados);
-                byte[] serialEncoded = security.encode(streamMemory.GetBuffer());
-                stream.Write(serialEncoded, 0, serialEncoded.Length);
-                streamMemory.Close();
-            }
-        }
-        catch (IOException) { }
     }
-
 }
