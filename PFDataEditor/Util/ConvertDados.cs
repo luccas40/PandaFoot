@@ -84,7 +84,7 @@ namespace PwndaGames.PandaFoot.Util
                 foreach (XElement time in camp.Elements("times").Elements("time"))
                 {
                     List<Player> jogadores = new List<Player>();
-
+                    List<Player> academia = new List<Player>();
 
                     foreach (XElement jogador in time.Element("jogadores").Elements("jogador"))
                     {
@@ -94,23 +94,28 @@ namespace PwndaGames.PandaFoot.Util
                                                 (int)Math.Ceiling(double.Parse(jogador.Element("pot").Value.Replace('.', ','))),
                                                 100,
                                                 jogador.Element("nacionalidade").Value,
-                                                jogador.Element("posicao").Value,
+                                                convertPlayerPosition(jogador.Element("posicao").Value),
                                                 DateTime.ParseExact(jogador.Element("contrato").Value, "d-M-yyyy", CultureInfo.InvariantCulture),
                                                 convertToDouble(jogador.Element("valor").Value),
                                                 convertToDouble(jogador.Element("custo").Value)
                         );
-                        jogadores.Add(p);
+                        if (jogador.Element("academia") != null)
+                            academia.Add(p);
+                        else
+                            jogadores.Add(p);
                     }
 
                     Team t = new Team(int.Parse(time.Element("id").Value),
                                         time.Element("nome").Value,
                                         time.Element("sigla").Value,
                                         jogadores,
+                                        academia,
                                         new Bank(convertToDouble(time.Element("dinheiro").Value)),
                                         "", //Cor
                                         new Coach("", int.Parse(time.Element("id").Value), -1),
                                         time.Element("nation").Value,
-                                        double.Parse(time.Element("reputacao").Value)
+                                        double.Parse(time.Element("reputacao").Value),
+                                        time.Element("img").Value
                         );
                     sp.Add(t.ID);
                     times.Add(t.ID, t);
@@ -136,8 +141,35 @@ namespace PwndaGames.PandaFoot.Util
 
             if (last == 'm')
                 n *= 1000000;
-
+            if (n < 0)
+                n *= -1;
             return n;
+        }
+
+        private static PlayerPosition convertPlayerPosition(string st)
+        {
+            string s = st.Replace('/', ' ');
+            if (s.Contains("GK"))
+                return PlayerPosition.GK;
+            else if (s.Contains("D ") && s.Contains(" L"))
+                return PlayerPosition.LE;
+            else if (s.Contains("D ") && s.Contains(" C"))
+                return PlayerPosition.ZG;
+            else if (s.Contains("SW"))
+                return PlayerPosition.ZG;
+            else if (s.Contains("D ") && ( s.Contains("RC") || s.Contains("R") ))
+                return PlayerPosition.LD;
+            else if (s.Contains("DM"))
+                return PlayerPosition.VOL;
+            else if ((s.Contains("AM") || s.Contains("M")) && s.Contains(" L"))
+                return PlayerPosition.ME;
+            else if ((s.Contains("AM") || s.Contains("M")) && ( s.Contains("RC") || s.Contains("R") ))
+                return PlayerPosition.MD;
+            else if ((s.Contains("AM") || s.Contains("M")) && ( s.Contains(" C") || s.Contains(" F"))) 
+                return PlayerPosition.MO;
+            else if (s.Contains("ST"))
+                return PlayerPosition.CA;
+            return PlayerPosition.None;
         }
 
 

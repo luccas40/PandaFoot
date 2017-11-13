@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -24,10 +25,16 @@ namespace PwndaGames.PandaFoot.Controller
         public Text numJogadores;
         public Text dinheiro;
         public Text data;
+        public TableList tabelaTime;
+        public Image logoTeam;
+        public Text leagueBtn;
 
         //ProxPartida
         public Text proxPartidaCasaFora;
         public Text proxPartidaTipo;
+        public Text proxPartidaData;
+        public Image proxPartidaT1Image;
+        public Image proxPartidaT2Image;
 
         //JogadorSelecionado
         public Text jNome;
@@ -119,23 +126,67 @@ namespace PwndaGames.PandaFoot.Controller
         {
             Coach c = Dados.me.getJogador();
             playerName.text = c.Nome;
-            numJogadores.text = c.Time.getPlayers().Count + " Jogadores";
-            dinheiro.text = "$ "+c.Time.Banco.Money;
+            numJogadores.text = c.Time.Jogadores.Count + " Jogadores";
+            dinheiro.text = "$ "+AbbrevationUtility.AbbreviateNumber(c.Time.Banco.Money);
             data.text = Dados.me.DiaAtual.ToShortDateString();
+            logoTeam.sprite = Resources.Load<Sprite>("TeamIMG/"+ c.Time.Logo.Split('.')[0]);
 
+
+            Match proxPartida = null;
+            DateTime tmpProx = new DateTime();
+            foreach (Dia d in Dados.me.Calendario.Values)
+            {
+                if (proxPartida != null)
+                    break;
+                if (d.Tipo == DiaType.Partida)
+                {
+                    foreach(Round r in d.Rounds)
+                    {
+                        if (r.Dia >= Dados.me.DiaAtual)
+                        {
+                            proxPartida = r.Matches.Where(t => t.containsTeam(c.Time.ID)).Single();
+                            if (proxPartida != null)
+                            {
+                                tmpProx = r.Dia;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
             proxPartidaCasaFora.text = "Próxima Partida (Fora)";
+            if (proxPartida.getTeamOne().ID == c.Time.ID)
+                proxPartidaCasaFora.text = "Próxima Partida (Casa)";
             proxPartidaTipo.text = "Amistoso";
+            proxPartidaData.text = tmpProx.ToShortDateString();
+            proxPartidaT1Image.sprite = Resources.Load<Sprite>("TeamIMG/" + proxPartida.getTeamOne().Logo.Split('.')[0]);
+            proxPartidaT2Image.sprite = Resources.Load<Sprite>("TeamIMG/" + proxPartida.getTeamTwo().Logo.Split('.')[0]);
 
-            jNome.text = c.Time.getPlayers()[0].Nome;
-            jForca.text = "Força: "+c.Time.getPlayers()[0].Forca; 
-            jIdade.text = "Idade: "+c.Time.getPlayers()[0].Idade;
-            jPosition.text = "Posição: " + c.Time.getPlayers()[0].Position;
-            jSalario.text = "Passe: $"+c.Time.getPlayers()[0].Valor+ "   \nSalário: $" + c.Time.getPlayers()[0].Salario; 
-            jJogos.text = "Jogos: 0     Gols: 0"; 
-            jCarac.text = "Caracteristicas"; 
+            selectPlayer(c.Time.Jogadores[0]);
+            tabelaTime.createLista(c.Time.Jogadores);
 
 
-    }
+            Dados.me.Campeonatos.ForEach(ch => {
+                if (ch.Participantes.Contains(c.Time.ID))
+                {
+                    leagueBtn.text = ch.Nome;
+                    return;
+                }
+            });
+
+        }
+
+        public void selectPlayer(Player p)
+        {
+            jNome.text = p.Nome;
+            jForca.text = "Força: " + p.Forca;
+            jIdade.text = "Idade: " + p.Idade;
+            jPosition.text = "Posição: " + p.Position;
+            jSalario.text = "Passe: $" + AbbrevationUtility.AbbreviateNumber(p.Valor) + "   \nSalário: $" + AbbrevationUtility.AbbreviateNumber(p.Salario);
+            jJogos.text = "Jogos: 0     Gols: 0";
+            jCarac.text = "Caracteristicas";
+            
+        }
 
     }
 }

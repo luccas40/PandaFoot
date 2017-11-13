@@ -1,4 +1,3 @@
-C:\Users\Pwnda\Documents\GitHub\PandaFoot\PandaFootLibrary\obj\Debug\PandaFootLibrary.csprojResolveAssemblyReference.cache
 C:\Users\Pwnda\Documents\GitHub\PandaFoot\PandaFootLibrary\bin\Debug\PandaFootLibrary.dll
 C:\Users\Pwnda\Documents\GitHub\PandaFoot\PandaFootLibrary\bin\Debug\PandaFootLibrary.pdb
 C:\Users\Pwnda\Documents\GitHub\PandaFoot\PandaFootLibrary\bin\Debug\UnityEditor.dll

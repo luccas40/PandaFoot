@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using PwndaGames.PandaFoot.Util;
 
 [Serializable()]
 public class Player {
@@ -12,7 +13,7 @@ public class Player {
     private int power;
     private int energy;
     private string nation;
-    private string position;
+    private PlayerPosition position;
     private DateTime contrato;
     private double valor;
     private double custo;
@@ -23,7 +24,7 @@ public class Player {
     public int Potencial { get { return power; } }
     public int Energia { get { return energy; } }
     public string Nation { get { return nation; } }
-    public string Position { get { return position; } }
+    public PlayerPosition Position { get { return position; } }
     public DateTime Contrato { get { return contrato; } }
     public double Valor { get { return valor; } }
     public double Salario { get { return custo; } }
@@ -32,7 +33,7 @@ public class Player {
     {
     }
 
-    public Player(string nome, int idade, int forca, int potencial, int energy, string nation, string position, DateTime contrato, double valor, double custo)
+    public Player(string nome, int idade, int forca, int potencial, int energy, string nation, PlayerPosition position, DateTime contrato, double valor, double custo)
     {
         this.name = nome;
         this.age = idade;
@@ -45,7 +46,6 @@ public class Player {
         this.valor = valor;
         this.custo = custo;
     }
-
     
 
 }

@@ -11,7 +11,7 @@ namespace Pwnda.Controller {
     public class RoundController : MonoBehaviour {
 
         public Text globalRoundMinute;
-
+        public GameObject teamPane;
 
         private int actualMinute;
         private RoundState state;
@@ -89,8 +89,7 @@ namespace Pwnda.Controller {
                 //porem por enquanto vamos só continuar a partida
                 if (tempo == MatchTempo.Tempo_1)
                 {   //se primeiro tempo
-                    RoundsToday.ForEach(o => o.proximoTempo());
-                    tempo = MatchTempo.Tempo_2;
+                    teamPane.SetActive(true);
                 }
             }
 
@@ -99,6 +98,13 @@ namespace Pwnda.Controller {
                 state = RoundState.Ended;
             }
 
+        }
+        
+        public void continueGame()
+        {
+            teamPane.SetActive(false);
+            RoundsToday.ForEach(o => o.proximoTempo());
+            tempo = MatchTempo.Tempo_2;
         }
 
 

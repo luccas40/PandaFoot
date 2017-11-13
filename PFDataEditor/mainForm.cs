@@ -51,7 +51,7 @@ namespace PFDataEditor
                     if (Dados.me.Times.Count == 0) return;
 
                     var idTeam = teams[0, teams.SelectedRows[0].Index].Value;
-                    players.DataSource = new BindingSource(new BindingList<Player>(Dados.me.Times[(int)idTeam].getPlayers()), null);
+                    players.DataSource = new BindingSource(new BindingList<Player>(Dados.me.Times[(int)idTeam].Jogadores), null);
                 });
             }).Start();
         }

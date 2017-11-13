@@ -40,6 +40,7 @@ namespace PwndaGames.PandaFoot.Util {
 
     public enum PlayerPosition
     {
+        None,
         GK,
         LE,
         ZG,
@@ -47,9 +48,8 @@ namespace PwndaGames.PandaFoot.Util {
         VOL,
         ME,
         MD,
-        MA,
-        ALE,
-        ALD
+        MO,
+        CA
     }
 
 

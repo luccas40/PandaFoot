@@ -8,7 +8,7 @@ namespace PwndaGames.PandaFoot.Util
     {
 
 
-        public static float Speed = 1;
+        public static float Speed = 10;
         
 
 

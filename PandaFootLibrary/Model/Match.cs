@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using PwndaGames.PandaFoot.Util;
+using PwndaGames.PandaFoot.Database;
 
 [Serializable()]
 public class Match  {
@@ -35,6 +36,14 @@ public class Match  {
         team1Gol = 0;
         team2Gol = 0;
     }
+
+    public bool containsTeam(int id)
+    {
+        return team1.ID == id || team2.ID == id;
+    }
+
+    public Team getTeamOne() { return Dados.me.Times[team1.ID]; }
+    public Team getTeamTwo() { return Dados.me.Times[team2.ID]; }
 
     public void setMatchObj(GameObject obj)
     {

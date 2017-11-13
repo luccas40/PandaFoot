@@ -42,6 +42,8 @@ namespace PwndaGames.PandaFoot.Database
 
         }
 
+        
+
         public void nextDay()
         {
             actualDay = actualDay.AddDays(1);

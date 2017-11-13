@@ -230,6 +230,9 @@
     <Compile Include="Assets\Scripts\Model\AI_Match.cs" />
     <Compile Include="Assets\Scripts\Model\Formations\F442.cs" />
     <Compile Include="Assets\Scripts\Model\Formations\Formation.cs" />
+    <Compile Include="Assets\Scripts\Model\Table\TableList.cs" />
+    <Compile Include="Assets\Scripts\Model\Table\TableRow.cs" />
+    <Compile Include="Assets\Scripts\Util\AbbrevationUtility.cs" />
     <Compile Include="Assets\Scripts\Util\Const.cs" />
     <Compile Include="Assets\Scripts\Util\Fading.cs" />
     <Compile Include="Assets\Scripts\Util\SaveGame.cs" />

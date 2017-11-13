@@ -26,6 +26,7 @@ class Jogador(object):
                 self.valor = ""
                 self.custo = ""
                 self.contrato = ""
+                self.academia = False
         def __eq__(self, other): 
                 return self.__dict__ == other.__dict__
                 
@@ -54,6 +55,7 @@ def convertJogador(obj):
 def getJogador(tr):
         jogador = Jogador()
         infos = tr.find_all('td')
+        academy = tr.find_all('span', class_='icon icon-random')
         jogador.nome = infos[1].find('a')['title']
         jogador.ano = infos[2].string.strip(' \t\n\r')
         jogador.nacionalidade = infos[1].find('div', class_='item_info').find('a')['title']
@@ -63,6 +65,8 @@ def getJogador(tr):
         jogador.valor = infos[5].string.strip(' \t\n\r').replace('£', '')
         jogador.custo = infos[4].string.strip(' \t\n\r').replace('£', '')
         jogador.contrato = infos[7].string.strip(' \t\n\r')
+        if len(academy) > 0:
+                jogador.academia = True
         return jogador
         
 def getTime( link , nome):
@@ -143,6 +147,8 @@ for p in pages:
                         ET.SubElement(jogadorXML, 'valor').text = j.valor
                         ET.SubElement(jogadorXML, 'custo').text = j.custo
                         ET.SubElement(jogadorXML, 'contrato').text = j.contrato
+                        if j.academia == True:
+                            ET.SubElement(jogadorXML, 'academia')    
                         
         tree = ET.ElementTree(rootXML)
         tree.write("./"+p[0])
